@@ -1,0 +1,865 @@
+/* ================================================================
+   程十六 · 个人主页样式表 style.css
+   ----------------------------------------------------------------
+   阅读顺序建议：
+     0. 设计变量（配色/圆角/宽度）—— 想换配色只改这里
+     1. 全局重置与基础排版
+     2. 通用容器与工具类
+     3. 各个区块的样式（导航 → 首屏 → 关于我 → 技能 → CS2 → 项目 → 爱好 → 页脚）
+     4. 响应式适配（媒体查询）
+   ----------------------------------------------------------------
+   本页布局 100% 使用 Flex（弹性盒子），没有用 float，也没有用 grid。
+   Flex 三件套记住就够用：
+     父元素：display:flex;               → 让子元素变成"弹性项目"
+             justify-content: ...;       → 主轴（默认横向）怎么排
+             align-items: ...;           → 交叉轴（默认纵向）怎么对齐
+             flex-wrap: wrap;            → 排不下时换行
+     子元素：flex: 1 1 320px;            → 放大比例 / 缩小比例 / 基准宽度
+   ================================================================ */
+
+
+/* ================================================================
+   0. 设计变量：整套配色只在这里定义一次，后面用 var() 调用
+   ================================================================ */
+:root {
+    --bg: #0b0e14;
+    /* 页面底色：近黑的冷灰，暗色主题的"底" */
+    --surface: #12161f;
+    /* 卡片底色：比页面亮一点点，才有层次 */
+    --surface-2: #191e2a;
+    /* 悬停时的卡片底色：再亮一点 */
+    --border: #232a38;
+    /* 边框 / 分割线 */
+    --text: #e6edf3;
+    /* 主要文字：不用纯白，纯白在暗色上会刺眼 */
+    --muted: #8b96a8;
+    /* 次要文字：小字、说明、日期 */
+    --accent: #7aa2f7;
+    /* 主色：全站唯一的一个彩色，只用在重点上 */
+    --accent-soft: rgba(122, 162, 247, 0.12);
+    /* 主色的透明版本，用于标签底色 */
+
+    --radius: 12px;
+    /* 统一的圆角，全站一致才显得干净 */
+    --max-w: 1080px;
+    /* 内容最大宽度：太宽的文字一行读起来很累 */
+    --nav-h: 64px;
+    /* 导航栏高度，锚点跳转时要留出这段距离 */
+}
+
+
+/* ================================================================
+   1. 全局重置与基础排版
+   ================================================================ */
+* {
+    margin: 0;
+    padding: 0;
+    /* 清零浏览器默认的边距，避免各浏览器表现不一致 */
+    box-sizing: border-box;
+    /* 让 width 包含 padding 和 border，算宽度不头疼（盒子模型学的就是它） */
+}
+
+html {
+    scroll-behavior: smooth;
+    /* 点导航锚点时平滑滚动，而不是"啪"地跳过去 */
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text);
+    /* 字体：优先用系统里更好看的中文字体，都没有就用默认 */
+    font-family: "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.75;
+    /* 行高 1.75：正文不挤在一起，暗色页面尤其需要 */
+    -webkit-font-smoothing: antialiased;
+}
+
+a {
+    color: inherit;
+    /* 链接继承父元素颜色，不让浏览器默认的蓝色破坏配色 */
+    text-decoration: none;
+    /* 去掉下划线，改用 hover 变色来表达"可点击" */
+}
+
+h1,
+h2,
+h3 {
+    line-height: 1.3;
+    font-weight: 700;
+}
+
+p {
+    color: #c3ccd9;
+    /* 正文用稍浅的灰色，比标题弱一档 */
+}
+
+
+/* ================================================================
+   2. 通用容器
+   max-width 限制宽度 + margin:0 auto 水平居中，是最常用的"内容居中"写法
+   ================================================================ */
+.container {
+    width: 100%;
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+
+/* ================================================================
+   3. 顶部导航
+   ================================================================ */
+.navbar {
+    position: sticky;
+    /* 粘性定位：滚到顶部之前它一直在最上面 */
+    top: 0;
+    z-index: 10;
+    background-color: rgba(11, 14, 20, 0.82);
+    /* 半透明背景 */
+    backdrop-filter: blur(10px);
+    /* 毛玻璃：让下面的内容透出一点虚影 */
+    border-bottom: 1px solid var(--border);
+}
+
+.navbar-inner {
+    /* Flex 用法①：一行两端对齐 —— logo 在左、导航在右 */
+    display: flex;
+    align-items: center;
+    /* 交叉轴居中：让 logo 和导航在垂直方向对齐 */
+    justify-content: space-between;
+    /* 主轴两端对齐：中间的空隙自动撑开 */
+    flex-wrap: wrap;
+    /* 窄屏放不下就换行，而不是挤出滚动条 */
+    gap: 12px;
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 12px 24px;
+    min-height: var(--nav-h);
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.logo span {
+    color: var(--accent);
+    /* 只用主色点亮一个小细节，克制但有效 */
+}
+
+.nav-links {
+    /* Flex 用法②：一组链接横向排列 */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 22px;
+    /* gap 让子元素之间自动留间距，不用再写 margin */
+}
+
+.nav-links a {
+    color: var(--muted);
+    font-size: 15px;
+    padding-bottom: 2px;
+    border-bottom: 1px solid transparent;
+    /* 先留一条透明下划线，hover 时只改颜色 → 不会引起跳动 */
+    transition: color 0.2s, border-color 0.2s;
+    /* 只做最简单的过渡，不加复杂动画 */
+}
+
+.nav-links a:hover {
+    color: var(--text);
+    border-bottom-color: var(--accent);
+}
+
+
+/* ================================================================
+   4. 首屏 Hero 区（第一张壁纸）
+   背景图写法：linear-gradient(半透明深色) + url(图片)
+   → 渐变在上、图片在下，等于给图片盖了一层可调深浅的"遮罩"，
+     这样白色文字不管压在图片什么位置都看得清
+   ================================================================ */
+.hero {
+    background-image:
+        /* 第一层：从左往右由深变浅的遮罩 —— 左边（文字区）压暗保证可读，
+           右边留亮，人物主体依然看得清。这是"文字压在图片上"最常用的做法 */
+        linear-gradient(90deg,
+            rgba(11, 14, 20, 0.92) 0%,
+            rgba(11, 14, 20, 0.80) 34%,
+            rgba(11, 14, 20, 0.44) 72%,
+            rgba(11, 14, 20, 0.28) 100%),
+        /* 第二层：自上而下渐隐到页面底色，让首屏和下面的内容自然衔接 */
+        linear-gradient(180deg,
+            rgba(11, 14, 20, 0.30) 0%,
+            rgba(11, 14, 20, 0.55) 58%,
+            var(--bg) 100%),
+        url("images/hero-sunset.jpg");
+    background-size: cover;
+    /* 铺满容器，按比例裁切 */
+    background-position: center 30%;
+    /* 让画面重点（人物脸部）尽量留在可视区域 */
+    background-repeat: no-repeat;
+
+    /* Flex 用法③：纵向单列 —— 适合"名片式"首屏 */
+    display: flex;
+    justify-content: center;
+    /* 横向居中 */
+    padding: 120px 24px 96px;
+}
+
+.hero-inner {
+    width: 100%;
+    max-width: var(--max-w);
+
+    /* Flex 用法④：flex-direction: column 把主轴改成纵向 */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    /* 子元素在交叉轴（这里是横向）靠左对齐 */
+    gap: 18px;
+    /* 每个子元素之间统一留 18px，比逐个写 margin 干净 */
+}
+
+.hero-hello {
+    color: var(--muted);
+    font-size: 16px;
+    letter-spacing: 2px;
+}
+
+.hero-name {
+    /* clamp(最小, 理想值, 最大)：字号随屏幕宽度自动变化，手机上不会太大 */
+    font-size: clamp(40px, 7vw, 68px);
+    letter-spacing: 2px;
+    text-shadow: 0 2px 24px rgba(0, 0, 0, 0.55);
+    /* 暗色背景上的文字加一点阴影，可读性更好 */
+}
+
+.hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.tag {
+    font-size: 14px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    /* 比高度还大的圆角 → 胶囊形状 */
+    color: var(--text);
+    background-color: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--border);
+    transition: color 0.2s, border-color 0.2s, background-color 0.2s;
+}
+
+.tag:hover {
+    color: var(--accent);
+    border-color: rgba(122, 162, 247, 0.5);
+    background-color: var(--accent-soft);
+}
+
+.hero-desc {
+    max-width: 620px;
+    /* 控制每行字数，太长不好读 */
+    font-size: 16.5px;
+    color: #d7dfe9;
+    /* 压在图片上的正文要再亮一点，不然和背景糊在一起 */
+}
+
+.hero-meta {
+    color: var(--muted);
+    font-size: 14px;
+    letter-spacing: 1px;
+}
+
+.hero-btns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 6px;
+}
+
+/* 按钮：flex 布局让"文字 + 图标"能水平居中对齐 */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s, transform 0.2s;
+}
+
+.btn-primary {
+    background-color: var(--accent);
+    color: #0b0e14;
+    /* 主色底上用深色文字，对比度最高 */
+}
+
+.btn-primary:hover {
+    background-color: #9dbaff;
+    transform: translateY(-2px);
+    /* 只上浮 2px，轻微的即时反馈 */
+}
+
+.btn-ghost {
+    border: 1px solid var(--border);
+    background-color: rgba(255, 255, 255, 0.03);
+    color: var(--text);
+}
+
+.btn-ghost:hover {
+    color: var(--accent);
+    border-color: rgba(122, 162, 247, 0.55);
+    transform: translateY(-2px);
+}
+
+
+/* ================================================================
+   5. 区块通用样式
+   ================================================================ */
+.section {
+    padding: 84px 0;
+    /* 上下大留白：这是"好看"的一半来源 */
+    scroll-margin-top: 80px;
+    /* 锚点跳转时给吸顶导航留出空间，标题不会被挡住 */
+}
+
+.section-title {
+    font-size: 26px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.section-title::before {
+    /* 标题左边的小色块，纯 CSS 画出来的装饰 */
+    content: "";
+    width: 4px;
+    height: 22px;
+    border-radius: 2px;
+    background-color: var(--accent);
+    flex: 0 0 auto;
+    /* 不许被压缩，宽度固定 */
+}
+
+.section-sub {
+    color: var(--muted);
+    font-size: 14px;
+    margin-top: 8px;
+}
+
+
+/* ================================================================
+   6. 关于我：左右两栏
+   ================================================================ */
+.about-row {
+    /* Flex 用法⑤：两栏布局 —— 父元素横向排，两个子元素按比例分宽度 */
+    display: flex;
+    align-items: flex-start;
+    /* 顶部对齐：两栏高度不一样时不要纵向居中 */
+    gap: 36px;
+    margin-top: 34px;
+}
+
+.about-text {
+    flex: 1 1 420px;
+    /* 放大1份 / 可缩小 / 基准宽度 420px */
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.dot-list {
+    list-style: none;
+    /* 去掉默认圆点，改用自定义小方块 */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 4px;
+}
+
+.dot-list li {
+    display: flex;
+    /* 让"小方块 + 文字"横向对齐 */
+    align-items: flex-start;
+    gap: 10px;
+    color: #c3ccd9;
+    font-size: 15px;
+}
+
+.dot-list li::before {
+    content: "";
+    flex: 0 0 6px;
+    /* 固定 6px 宽，不参与伸缩 */
+    width: 6px;
+    height: 6px;
+    margin-top: 12px;
+    /* 微调让它和第一行文字的视觉中线对齐 */
+    border-radius: 2px;
+    background-color: var(--accent);
+}
+
+/* 信息卡：左侧名称、右侧内容，一行一个 dt/dd */
+.info-card {
+    flex: 0 1 340px;
+    /* 不放大、可缩小、基准 340px */
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 6px 22px;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* 名称在左、内容在右，中间自动撑开 */
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px dashed var(--border);
+    /* 虚线分隔，比实线更轻 */
+}
+
+.info-item:last-child {
+    border-bottom: none;
+    /* 最后一个不要多余的分隔线 */
+}
+
+.info-item dt {
+    color: var(--muted);
+    font-size: 14px;
+    flex: 0 0 auto;
+}
+
+.info-item dd {
+    font-size: 15px;
+    font-weight: 600;
+    text-align: right;
+    /* 长内容（比如身份标签）自动换行后仍然右对齐 */
+}
+
+.link {
+    color: var(--accent);
+    border-bottom: 1px solid rgba(122, 162, 247, 0.4);
+    transition: border-color 0.2s;
+}
+
+.link:hover {
+    border-bottom-color: var(--accent);
+}
+
+
+/* ================================================================
+   7. 技能卡片墙
+   ================================================================ */
+.skill-grid {
+    /* Flex 用法⑥：卡片墙 —— 一行放不下自动换行 */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 34px;
+}
+
+.skill-card {
+    flex: 1 1 320px;
+    /* 每张卡基准 320px：屏幕够宽就一行 3 张，不够就换行 */
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    transition: background-color 0.2s, border-color 0.2s, transform 0.2s;
+}
+
+.skill-card:hover {
+    background-color: var(--surface-2);
+    border-color: rgba(122, 162, 247, 0.45);
+    transform: translateY(-3px);
+}
+
+.skill-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.skill-name {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+/* 状态徽章：同一套形状，只换颜色 */
+.badge {
+    flex: 0 0 auto;
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 1px solid;
+    white-space: nowrap;
+    /* 不许换行，"学习中"三个字要在一起 */
+}
+
+.badge-learning {
+    color: #7aa2f7;
+    border-color: rgba(122, 162, 247, 0.45);
+    background-color: rgba(122, 162, 247, 0.12);
+}
+
+.badge-basic {
+    color: #c0a8ff;
+    border-color: rgba(192, 168, 255, 0.45);
+    background-color: rgba(192, 168, 255, 0.12);
+}
+
+.badge-using {
+    color: #7ee0a8;
+    border-color: rgba(126, 224, 168, 0.45);
+    background-color: rgba(126, 224, 168, 0.12);
+}
+
+.badge-plan {
+    color: var(--muted);
+    border-color: var(--border);
+    background-color: rgba(255, 255, 255, 0.04);
+}
+
+.badge-pro {
+    color: #ffb070;
+    border-color: rgba(255, 176, 112, 0.45);
+    background-color: rgba(255, 176, 112, 0.12);
+}
+
+/* 进度条：外层是灰轨道，内层 span 用行内 style 控制宽度 */
+.skill-bar {
+    height: 6px;
+    border-radius: 999px;
+    background-color: #1e2430;
+    overflow: hidden;
+}
+
+.skill-bar span {
+    display: block;
+    /* span 默认是行内元素，要改成块级才能设高度 */
+    height: 100%;
+    border-radius: 999px;
+    background-image: linear-gradient(90deg, var(--accent), #a6c1ff);
+}
+
+.skill-note {
+    font-size: 13.5px;
+    color: var(--muted);
+}
+
+
+/* ================================================================
+   8. CS2 区块（第二张壁纸做背景）
+   ================================================================ */
+.cs2 {
+    background-image:
+        linear-gradient(180deg,
+            var(--bg) 0%,
+            rgba(11, 14, 20, 0.72) 40%,
+            rgba(11, 14, 20, 0.92) 100%),
+        url("images/hero-moon.jpg");
+    background-size: cover;
+    background-position: center 45%;
+    background-repeat: no-repeat;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+}
+
+.cs2-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 34px;
+}
+
+.stat-card {
+    flex: 1 1 220px;
+    background-color: rgba(18, 22, 31, 0.78);
+    /* 半透明卡片，让背景图透出来一点 */
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    backdrop-filter: blur(6px);
+    transition: border-color 0.2s, transform 0.2s;
+}
+
+.stat-card:hover {
+    border-color: rgba(122, 162, 247, 0.45);
+    transform: translateY(-3px);
+}
+
+.stat-label {
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 3px;
+    /* 标签字少，加点字距更像"标签" */
+}
+
+.stat-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    margin-top: 6px;
+}
+
+.stat-value-sm {
+    font-size: 17px;
+    /* 地图名比较长，字号小一点 */
+}
+
+.stat-note {
+    font-size: 13.5px;
+    color: var(--muted);
+    margin-top: 6px;
+}
+
+.cs2-note {
+    margin-top: 24px;
+    max-width: 780px;
+    font-size: 15px;
+    color: #c3ccd9;
+    border-left: 3px solid var(--accent);
+    padding-left: 16px;
+}
+
+
+/* ================================================================
+   9. 项目卡片墙
+   ================================================================ */
+.work-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-top: 34px;
+}
+
+.work-card {
+    /* 基准 420px：1080 宽的容器里正好一行 2 张，4 个项目排成整齐的 2×2 */
+    flex: 1 1 420px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    transition: background-color 0.2s, border-color 0.2s, transform 0.2s;
+}
+
+.work-card:hover {
+    background-color: var(--surface-2);
+    border-color: rgba(122, 162, 247, 0.45);
+    transform: translateY(-4px);
+}
+
+.work-index {
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 2px;
+}
+
+.work-card h3 {
+    font-size: 17px;
+}
+
+.work-tag {
+    font-size: 12.5px;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+}
+
+.work-desc {
+    font-size: 14.5px;
+    color: #b9c2cf;
+}
+
+
+/* ================================================================
+   10. 爱好卡片
+   ================================================================ */
+.hobby-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-top: 34px;
+}
+
+.hobby-card {
+    flex: 1 1 280px;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    transition: background-color 0.2s, border-color 0.2s, transform 0.2s;
+}
+
+.hobby-card:hover {
+    background-color: var(--surface-2);
+    border-color: rgba(122, 162, 247, 0.45);
+    transform: translateY(-4px);
+}
+
+.hobby-icon {
+    font-size: 22px;
+}
+
+.hobby-card h3 {
+    font-size: 16px;
+    margin: 6px 0;
+}
+
+.hobby-desc {
+    font-size: 14.5px;
+    color: #b9c2cf;
+}
+
+
+/* ================================================================
+   11. 页脚
+   ================================================================ */
+.footer {
+    border-top: 1px solid var(--border);
+    background-color: #090c11;
+    padding: 26px 0;
+}
+
+.footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--muted);
+}
+
+.footer-inner p {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.footer-links {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.footer-links a {
+    transition: color 0.2s;
+}
+
+.footer-links a:hover {
+    color: var(--accent);
+}
+
+
+/* ================================================================
+   12. 响应式适配
+   思路：桌面样式写完，再用 @media 在小屏上"重写"需要变的部分
+   ≤ 860px：平板竖屏 / 手机横屏 —— 双栏变单栏，卡片一张一行
+   ≤ 520px：手机竖屏 —— 进一步缩小字号和留白
+   ================================================================ */
+@media (max-width: 860px) {
+
+    /* 首屏留白变小，手机上不要浪费垂直空间 */
+    .hero {
+        padding: 84px 20px 64px;
+    }
+
+    .section {
+        padding: 60px 0;
+    }
+
+    .section-title {
+        font-size: 22px;
+    }
+
+    /* 关键一步：把横向的 flex 改成纵向，两栏自然就上下堆叠了 */
+    .about-row {
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .info-card {
+        flex: 1 1 auto;
+        width: 100%;
+    }
+
+    /* 卡片改成"一张占满一行"，比挤成两列更好读 */
+    .skill-card,
+    .work-card,
+    .hobby-card {
+        flex: 1 1 100%;
+    }
+
+    /* CS2 数据卡保留两列，但基准宽度调小 */
+    .stat-card {
+        flex: 1 1 45%;
+    }
+
+    .container {
+        padding: 0 18px;
+    }
+}
+
+@media (max-width: 520px) {
+
+    .navbar-inner {
+        padding: 10px 16px;
+    }
+
+    /* 手机上让导航独占一行（flex-basis:100% 会强制换行），
+       否则 logo 和 5 个链接挤在一行可能被挤出屏幕 */
+    .nav-links {
+        flex: 1 1 100%;
+        gap: 16px;
+        justify-content: flex-start;
+    }
+
+    .nav-links a {
+        font-size: 14px;
+    }
+
+    .hero {
+        padding: 68px 16px 56px;
+    }
+
+    .hero-desc {
+        font-size: 15.5px;
+    }
+
+    /* 手机上一个按钮占一行，指头更好点 */
+    .hero-btns {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+    }
+
+    /* CS2 数据卡也变成一张一行 */
+    .stat-card {
+        flex: 1 1 100%;
+    }
+
+    .skill-card,
+    .work-card,
+    .hobby-card {
+        padding: 20px;
+    }
+
+    .footer-inner {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

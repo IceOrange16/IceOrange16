@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <!-- 移动端适配最关键的一行：不加这句，手机浏览器会按 980px 缩放整页，字小到看不清 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>程十六 · 个人主页</title>
+    <meta name="description" content="程十六的个人主页：前端自学者 / CS2 玩家 / 摄影爱好者，坐标湖北咸宁。" />
+
+    <!-- 外部样式表：全站样式都写在 style.css 里，HTML 只负责结构 -->
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+    <!-- ============================================================
+         1. 顶部导航
+         Flex 用法：外层 display:flex + justify-content:space-between
+         → 左边 logo 贴左、右边导航贴右，中间空间自动撑开
+         id="top" 同时是"回到顶部"链接的落点
+         ============================================================ -->
+    <header class="navbar" id="top">
+        <div class="navbar-inner">
+            <a class="logo" href="#top">程十六<span>.dev</span></a>
+
+            <nav class="nav-links">
+                <!-- 这些是"本页锚点"链接，跳到下面同 id 的区块 -->
+                <a href="#about">关于我</a>
+                <a href="#skills">技能</a>
+                <a href="#cs2">CS2</a>
+                <a href="#works">项目</a>
+                <a href="#hobbies">爱好</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ============================================================
+         2. 首屏 Hero 区（用第一张壁纸做背景）
+         Flex 用法：display:flex + flex-direction:column
+         → 里面的文字块自上而下排成一列
+         ============================================================ -->
+    <section class="hero">
+        <div class="hero-inner">
+            <p class="hero-hello">你好，我是</p>
+
+            <h1 class="hero-name">程十六</h1>
+
+            <!-- 身份标签：一行胶囊，用 flex + flex-wrap 排，窄屏自动换行 -->
+            <div class="hero-tags">
+                <span class="tag">前端自学者</span>
+                <span class="tag">CS2 玩家</span>
+                <span class="tag">摄影爱好者</span>
+            </div>
+
+            <p class="hero-desc">
+                正在从零自学 Web 前端，跟着免费课程一步步走，目前刚学到 Flex 弹性盒子布局。
+                喜欢把想法一行行敲成能打开的页面，也喜欢在 CS2 里靠枪法说话。
+            </p>
+
+            <p class="hero-meta">17 岁 · 湖北 · 咸宁</p>
+
+            <!-- 两个按钮：flex 横排，窄屏换行 -->
+            <div class="hero-btns">
+                <a class="btn btn-primary" href="#works">看看我的项目</a>
+                <!-- target="_blank" 新窗口打开；rel="noopener" 是新窗口打开时的安全习惯 -->
+                <a class="btn btn-ghost" href="https://github.com/iceorange16" target="_blank" rel="noopener">GitHub</a>
+            </div>
+        </div>
+    </section>
+
+    <main>
+
+        <!-- ============================================================
+             3. 关于我
+             左右两栏：Flex 的经典"两栏布局"
+             → 父元素 display:flex，两个子元素各自 flex:1 按比例分宽度
+             → 手机上在 CSS 里把 flex-direction 改成 column 就变上下排列
+             ============================================================ -->
+        <section class="section" id="about">
+            <div class="container">
+                <h2 class="section-title">关于我</h2>
+
+                <div class="about-row">
+                    <!-- 左栏：文字 -->
+                    <div class="about-text">
+                        <p>
+                            我是程十六，17 岁，湖北咸宁。现在正在从零自学 Web 前端，
+                            跟着免费课程一节一节往下学，目前刚学到 Flex 弹性盒子布局。
+                            比起"看会"，我更喜欢亲手把结构敲出来，然后在浏览器里看到它真的排好了。
+                        </p>
+                        <p>
+                            性格上我擅长写代码和逻辑，视觉设计不算强项，所以更偏爱干净、极简、
+                            结构清晰的方案；也因为喜欢即时反馈，写代码这件事刚好对我胃口。
+                        </p>
+
+                        <ul class="dot-list">
+                            <li>擅长代码与逻辑，视觉设计还在慢慢练</li>
+                            <li>喜欢即时反馈，偏爱干净、极简的页面</li>
+                            <li>留长发，有自己的穿搭风格</li>
+                        </ul>
+                    </div>
+
+                    <!-- 右栏：信息卡（dl 是"描述列表"，dt 是名称、dd 是内容） -->
+                    <dl class="info-card">
+                        <div class="info-item">
+                            <dt>姓名</dt>
+                            <dd>程十六</dd>
+                        </div>
+                        <div class="info-item">
+                            <dt>年龄</dt>
+                            <dd>17 岁</dd>
+                        </div>
+                        <div class="info-item">
+                            <dt>坐标</dt>
+                            <dd>湖北 · 咸宁</dd>
+                        </div>
+                        <div class="info-item">
+                            <dt>身份</dt>
+                            <dd>前端自学者 / CS2 玩家 / 摄影爱好者</dd>
+                        </div>
+                        <div class="info-item">
+                            <dt>GitHub</dt>
+                            <dd>
+                                <a class="link" href="https://github.com/iceorange16" target="_blank" rel="noopener">iceorange16</a>
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             4. 技能状态
+             Flex 用法：display:flex + flex-wrap:wrap
+             → 卡片排不下就自动换行，这就是最简单的"自适应卡片墙"
+             ============================================================ -->
+        <section class="section" id="skills">
+            <div class="container">
+                <h2 class="section-title">技能状态</h2>
+                <p class="section-sub">如实标注进度，不夸大——学到哪就写到哪。</p>
+
+                <div class="skill-grid">
+                    <div class="skill-card">
+                        <div class="skill-head">
+                            <span class="skill-name">HTML5 + CSS3（含 Flex 布局）</span>
+                            <span class="badge badge-learning">学习中</span>
+                        </div>
+                        <!-- 进度条：宽度用行内 style 直接给百分比，一眼能看懂 -->
+                        <div class="skill-bar"><span style="width: 60%"></span></div>
+                        <p class="skill-note">能手写语义化结构，用 Flex 独立完成整页布局（就是本页）。</p>
+                    </div>
+
+                    <div class="skill-card">
+                        <div class="skill-head">
+                            <span class="skill-name">JavaScript</span>
+                            <span class="badge badge-basic">入门</span>
+                        </div>
+                        <div class="skill-bar"><span style="width: 25%"></span></div>
+                        <p class="skill-note">会基础语法与简单 DOM 操作，还在继续练。</p>
+                    </div>
+
+                    <div class="skill-card">
+                        <div class="skill-head">
+                            <span class="skill-name">Git / GitHub</span>
+                            <span class="badge badge-using">使用中</span>
+                        </div>
+                        <div class="skill-bar"><span style="width: 55%"></span></div>
+                        <p class="skill-note">日常会用 clone / add / commit / push 管理自己的项目。</p>
+                    </div>
+
+                    <div class="skill-card">
+                        <div class="skill-head">
+                            <span class="skill-name">Linux 基础操作</span>
+                            <span class="badge badge-using">使用中</span>
+                        </div>
+                        <div class="skill-bar"><span style="width: 50%"></span></div>
+                        <p class="skill-note">常用命令、文件与权限操作都能自己搞定。</p>
+                    </div>
+
+                    <div class="skill-card">
+                        <div class="skill-head">
+                            <span class="skill-name">Node.js / Express</span>
+                            <span class="badge badge-plan">计划中</span>
+                        </div>
+                        <div class="skill-bar"><span style="width: 10%"></span></div>
+                        <p class="skill-note">排在前端基础之后，先把 HTML/CSS/JS 打牢。</p>
+                    </div>
+
+                    <div class="skill-card">
+                        <div class="skill-head">
+                            <span class="skill-name">CS2 枪法与战术</span>
+                            <span class="badge badge-pro">熟练</span>
+                        </div>
+                        <div class="skill-bar"><span style="width: 90%"></span></div>
+                        <p class="skill-note">突破手，靠枪法和节奏说话。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             5. CS2 区块（用第二张壁纸做背景）
+             Flex 用法：flex-wrap 让几张数据卡自动换行
+             ============================================================ -->
+        <section class="section cs2" id="cs2">
+            <div class="container">
+                <h2 class="section-title">CS2</h2>
+                <p class="section-sub">枪法之外，靠 Demo 和复盘涨段位。</p>
+
+                <div class="cs2-row">
+                    <div class="stat-card">
+                        <p class="stat-label">定 位</p>
+                        <p class="stat-value">突破手（Entry）</p>
+                        <p class="stat-note">刚枪型玩家，负责开点、抢节奏。</p>
+                    </div>
+
+                    <div class="stat-card">
+                        <p class="stat-label">段 位</p>
+                        <p class="stat-value">S 段</p>
+                        <p class="stat-note">目标：S+，还在往上打。</p>
+                    </div>
+
+                    <div class="stat-card">
+                        <p class="stat-label">常用地图</p>
+                        <p class="stat-value stat-value-sm">Mirage · Dust2 · Ancient</p>
+                        <p class="stat-note">三张图都练过完整道具与卡点。</p>
+                    </div>
+
+                    <div class="stat-card">
+                        <p class="stat-label">代练经历</p>
+                        <p class="stat-value stat-value-sm">A 段 → S 段</p>
+                        <p class="stat-note">承接 A 段至 S 段位带打。</p>
+                    </div>
+                </div>
+
+                <p class="cs2-note">
+                    平时会研究职业选手的 Demo：看他们的选点、卡点时间、身法和道具时机，
+                    再拿去自己的排位里验证哪些能用、哪些不适合我。
+                </p>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             6. 项目与经历
+             和技能卡一样的套路：flex + flex-wrap 排卡片
+             ============================================================ -->
+        <section class="section" id="works">
+            <div class="container">
+                <h2 class="section-title">项目与经历</h2>
+                <p class="section-sub">目前手上的四件事，都在进行中。</p>
+
+                <div class="work-grid">
+                    <article class="work-card">
+                        <p class="work-index">01</p>
+                        <h3>CS2 战术手册网页</h3>
+                        <p class="work-tag">HTML / CSS</p>
+                        <p class="work-desc">
+                            按地图点位整理进攻方与防守方要点，用表格的 rowspan / colspan 做单元格合并，
+                            纯手写 HTML 表格与 Flex 排版。
+                        </p>
+                    </article>
+
+                    <article class="work-card">
+                        <p class="work-index">02</p>
+                        <h3>个人主页（本页）</h3>
+                        <p class="work-tag">HTML / CSS · Flex</p>
+                        <p class="work-desc">
+                            无框架单页网站，自主完成配色与布局，全部用 Flex 排版，并适配手机与电脑两种屏幕。
+                        </p>
+                    </article>
+
+                    <article class="work-card">
+                        <p class="work-index">03</p>
+                        <h3>段位代练（CS2）</h3>
+                        <p class="work-tag">游戏 / 服务</p>
+                        <p class="work-desc">
+                            承接 A 段至 S 段位带打，按客户当前段位和常用地图安排上分节奏。
+                        </p>
+                    </article>
+
+                    <article class="work-card">
+                        <p class="work-index">04</p>
+                        <h3>摄影练习</h3>
+                        <p class="work-tag">摄影 / 后期</p>
+                        <p class="work-desc">
+                            尼康 D3100，RAW 格式拍摄，Lightroom 后期；喜欢扫街，从取景到修图走完整流程。
+                        </p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             7. 爱好
+             同样用 Flex：一行三张卡，窄屏自动变成一列
+             ============================================================ -->
+        <section class="section" id="hobbies">
+            <div class="container">
+                <h2 class="section-title">爱好</h2>
+
+                <div class="hobby-grid">
+                    <div class="hobby-card">
+                        <p class="hobby-icon">🎯</p>
+                        <h3>CS2 上分</h3>
+                        <p class="hobby-desc">单排、刚枪地图、研究职业 Demo，把复盘当日常。</p>
+                    </div>
+
+                    <div class="hobby-card">
+                        <p class="hobby-icon">🏃</p>
+                        <h3>健身徒步</h3>
+                        <p class="hobby-desc">引体向上、长距离徒步，用体能保持竞技状态。</p>
+                    </div>
+
+                    <div class="hobby-card">
+                        <p class="hobby-icon">📷</p>
+                        <h3>摄影扫街</h3>
+                        <p class="hobby-desc">从取景到后期的完整过程，慢慢练自己的眼睛。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ============================================================
+         8. 页脚：Flex + justify-content:space-between 左右分开
+         ============================================================ -->
+    <footer class="footer">
+        <div class="container footer-inner">
+            <p>© 2026 程十六 · 原生 HTML + CSS 手写，未使用任何框架</p>
+            <p class="footer-links">
+                <a href="https://github.com/iceorange16" target="_blank" rel="noopener">github.com/iceorange16</a>
+                <span class="footer-dot">·</span>
+                <a href="#top">回到顶部 ↑</a>
+            </p>
+        </div>
+    </footer>
+
+</body>
+
+</html>
