@@ -193,7 +193,7 @@ p {
             rgba(11, 14, 20, 0.30) 0%,
             rgba(11, 14, 20, 0.55) 58%,
             var(--bg) 100%),
-        url("images/hero-sunset.jpg");
+        url("hero-sunset.jpg");
     background-size: cover;
     /* 铺满容器，按比例裁切 */
     background-position: center 30%;
@@ -565,7 +565,7 @@ p {
             var(--bg) 0%,
             rgba(11, 14, 20, 0.72) 40%,
             rgba(11, 14, 20, 0.92) 100%),
-        url("images/hero-moon.jpg");
+        url("hero-moon.jpg");
     background-size: cover;
     background-position: center 45%;
     background-repeat: no-repeat;
